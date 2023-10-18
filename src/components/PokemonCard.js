@@ -1,8 +1,11 @@
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
+import getColorsByPokemonType from "../utils/getColorsByPokemonType"
 
 export default function PokemonCard(props) {
     const { pokemon } = props;
+    const pokemonColor = getColorsByPokemonType(pokemon.type);
+    const bgStyles = { backgroundColor: pokemonColor, ...styles.bgStyles };
 
     const goToPokemon = () => {
         console.log(`Vamos al pokemon: ${pokemon.name}`);
@@ -12,7 +15,7 @@ export default function PokemonCard(props) {
         <TouchableWithoutFeedback onPress={goToPokemon}>
             <View style={styles.card}>
                 <View style={styles.spacing}>
-                    <View style={styles.bgStyles}>
+                    <View style={bgStyles}>
                         <Text style={styles.number}>#{`${pokemon.order}`.padStart(3, 0)}</Text>
                         <Text style={styles.name}>{pokemon.name}</Text>
                         <Image source={{ uri: pokemon.imagen }} style={styles.imagen} />
@@ -26,14 +29,16 @@ export default function PokemonCard(props) {
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        height: 130,
+        height: 140,
     },
     spacing: {
         flex: 1,
         padding: 5,
     },
     bgStyles: {
-        backgroundColor: "red",
+        flex: 1,
+        borderRadius: 15,
+        padding: 5,
     },
     imagen: {
         position: 'absolute',
@@ -54,5 +59,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
         paddingTop: 10,
+        textTransform: 'capitalize',
     },
 })
