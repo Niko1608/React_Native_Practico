@@ -6,6 +6,7 @@ export default function PokemonList(props) {
     const { pokemons, loadPokemons, isNext } = props;
 
     const loadMore = () => {
+        console.log("loadMore");
         loadPokemons();
     }
     return (

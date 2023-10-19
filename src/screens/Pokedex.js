@@ -8,9 +8,7 @@ export default function Pokedex() {
     const [nextUrl, setNextUrl] = useState(null);
 
     useEffect(() => {
-        (async () => {
-            await loadPokemons();
-        })();
+        loadPokemons();
     }, []);
 
     const loadPokemons = async () => {
@@ -18,21 +16,21 @@ export default function Pokedex() {
             const response = await getPokemonApi(nextUrl);
             setNextUrl(response.next);
 
-            const pokemonsArray = [];
-            for await (const pokemon of response.results) {
+            const pokemonsArray = await Promise.all(response.results.map(async pokemon => {
                 const pokemonDetails = await getPokemonDetailsByUrlApi(pokemon.url);
 
-                pokemonsArray.push({
+                return {
                     id: pokemonDetails.id,
                     name: pokemonDetails.name,
                     type: pokemonDetails.types[0].type.name,
                     order: pokemonDetails.order,
                     imagen:
                         pokemonDetails.sprites.other["official-artwork"].front_default,
-                });
-            }
+                };
+            }))
 
-            setPokemons([...pokemons, ...pokemonsArray]);
+
+            setPokemons((currentState) => [...currentState, ...pokemonsArray]);
         } catch (error) {
             console.error(error);
         }
